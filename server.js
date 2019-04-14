@@ -5,8 +5,8 @@ const connect = require('knex');
 
 const app = express();
 
-app.use(bodyParser.json());
 app.use(cors());
+app.use(bodyParser.json());
 
 const db = connect({
     client: 'pg',
@@ -16,6 +16,11 @@ const db = connect({
     }
 });
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 app.post('/login', (req, res) => {
     const { id, pass } = req.body;
