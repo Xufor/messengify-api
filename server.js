@@ -5,8 +5,11 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
 app.use(bodyParser.json());
+app.options('/load', cors());
+app.options('/login', cors());
+app.options('/register', cors());
+app.options('/send', cors());
 
 const db = connect({
     client: 'pg',
@@ -20,7 +23,7 @@ app.get('/', (req, res) => {
     res.json('API WORKING!');
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', cors(), (req, res) => {
     const { id, pass } = req.body;
     db.select('name', 'pass')
         .from('creds')
@@ -36,7 +39,7 @@ app.post('/login', (req, res) => {
         );
 });
 
-app.post('/load', (req, res) => {
+app.post('/load', cors(), (req, res) => {
     const { id } = req.body;
     db.select('source', 'destination', 'message')
         .from('mail')
@@ -63,7 +66,7 @@ app.post('/load', (req, res) => {
     }
 );
 
-app.post('/register', (req, res) => {
+app.post('/register', cors(), (req, res) => {
     const { pass, name } = req.body;
     db.insert({ name, pass })
         .into('creds')
@@ -73,7 +76,7 @@ app.post('/register', (req, res) => {
         });
 });
 
-app.post('/send', (req, res) => {
+app.post('/send', cors(), (req, res) => {
     const { id, to, text } = req.body;
     db.insert({ source: id, destination: to, message: text })
         .into('mail')
