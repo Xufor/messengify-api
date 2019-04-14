@@ -11,10 +11,8 @@ app.use(cors());
 const db = connect({
     client: 'pg',
     connection: {
-        host : '127.0.0.1',
-        user: 'xufor',
-        password: '1920',
-        database: 'messengify'
+        host: process.env.DATABASE_URL,
+        ssl: true
     }
 });
 
@@ -82,6 +80,6 @@ app.post('/send', (req, res) => {
         });
 });
 
-app.listen(3003, () => {
+app.listen(process.env.PORT || 3003, () => {
     console.log(`Server is online.`);
 });
