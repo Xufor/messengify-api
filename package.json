@@ -1,0 +1,26 @@
+{
+  "name": "messengify-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xufor/messengify-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Xufor/messengify-api/issues"
+  },
+  "homepage": "https://github.com/Xufor/messengify-api#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "knex": "^0.16.5",
+    "pg": "^7.9.0"
+  }
+}
