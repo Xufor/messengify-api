@@ -35,6 +35,32 @@ app.post('/login', (req, res) => {
         );
 });
 
-app.listen(6000, () => {
+app.post('/load', (req, res) => {
+    const { id } = req.body;
+    db.select('source', 'destination', 'message')
+        .from('mail')
+        .where('source', '=', id)
+        .orWhere('destination', '=', id)
+        .then(
+            mailData => {
+                db.select('id', 'name')
+                    .from('creds')
+                    .then(
+                        credData => {
+                            mailData.map((listItem) => {
+                                r1 = credData.filter((value) => value.id === listItem.source);
+                                listItem.source = r1[0].name;
+                                r2 = credData.filter((value) => value.id === listItem.destination);
+                                listItem.destination = r2[0].name;
+                                return listItem;
+                            });
+                            res.json(mailData);
+                        }
+                    );
+            }
+        );
+});
+
+app.listen(3003, () => {
     console.log(`Server is online.`);
 });
