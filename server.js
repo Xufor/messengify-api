@@ -21,14 +21,14 @@ const db = connect({
 
 app.post('/login', (req, res) => {
     const { id, pass } = req.body;
-    db.select('pass')
+    db.select('name', 'pass')
         .from('creds')
         .where('id', '=', id)
         .then(
             data => {
                 if(data[0] !== undefined) {
                     if (pass === data[0].pass)
-                        res.json('Success');
+                        res.json({flag: 'Success', name: data[0].name});
                 } else
                     res.json('Failure');
             }
@@ -59,6 +59,27 @@ app.post('/load', (req, res) => {
                     );
             }
         );
+    }
+);
+
+app.post('/register', (req, res) => {
+    const { id, pass, name } = req.body;
+    db.insert({ name, pass })
+        .into('creds')
+        .returning('name')
+        .then((result) => {
+            res.json('Done');
+        });
+});
+
+app.post('/send', (req, res) => {
+    const { id, to, text } = req.body;
+    db.insert({ source: id, destination: to, message: text })
+        .into('mail')
+        .returning('source')
+        .then((result) => {
+            res.json('Done');
+        });
 });
 
 app.listen(3003, () => {
