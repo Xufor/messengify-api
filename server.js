@@ -63,12 +63,12 @@ app.post('/load', (req, res) => {
 );
 
 app.post('/register', (req, res) => {
-    const { id, pass, name } = req.body;
+    const { pass, name } = req.body;
     db.insert({ name, pass })
         .into('creds')
-        .returning('name')
+        .returning('id')
         .then((result) => {
-            res.json('Done');
+            res.json(result);
         });
 });
 
