@@ -1,12 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const connect = require('knex');
 
 const app = express();
 
-app.use(cors());
 app.use(bodyParser.json());
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 const db = connect({
     client: 'pg',
@@ -14,12 +18,6 @@ const db = connect({
         host: process.env.DATABASE_URL,
         ssl: true
     }
-});
-
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
 });
 
 app.post('/login', (req, res) => {
@@ -51,9 +49,9 @@ app.post('/load', (req, res) => {
                     .then(
                         credData => {
                             mailData.map((listItem) => {
-                                r1 = credData.filter((value) => value.id === listItem.source);
+                                let r1 = credData.filter((value) => value.id === listItem.source);
                                 listItem.source = r1[0].name;
-                                r2 = credData.filter((value) => value.id === listItem.destination);
+                                let r2 = credData.filter((value) => value.id === listItem.destination);
                                 listItem.destination = r2[0].name;
                                 return listItem;
                             });
@@ -81,7 +79,7 @@ app.post('/send', (req, res) => {
         .into('mail')
         .returning('source')
         .then((result) => {
-            res.json('Done');
+            res.json(result);
         });
 });
 
