@@ -5,7 +5,8 @@ const cors = require('cors');
 
 const app = express();
 
-app.use('*', cors());
+app.use(cors());
+app.options('*', cors());
 app.use(bodyParser.json());
 
 const db = connect({
