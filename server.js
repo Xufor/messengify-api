@@ -1,15 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const connect = require('knex');
-const cors = require('cors');
 
 const app = express();
 
 app.use(bodyParser.json());
-app.options('/load', cors());
-app.options('/login', cors());
-app.options('/register', cors());
-app.options('/send', cors());
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 const db = connect({
     client: 'pg',
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
     res.json('API WORKING!');
 });
 
-app.post('/login', cors(), (req, res) => {
+app.post('/login', (req, res) => {
     const { id, pass } = req.body;
     db.select('name', 'pass')
         .from('creds')
@@ -39,7 +40,7 @@ app.post('/login', cors(), (req, res) => {
         );
 });
 
-app.post('/load', cors(), (req, res) => {
+app.post('/load', (req, res) => {
     const { id } = req.body;
     db.select('source', 'destination', 'message')
         .from('mail')
@@ -66,7 +67,7 @@ app.post('/load', cors(), (req, res) => {
     }
 );
 
-app.post('/register', cors(), (req, res) => {
+app.post('/register', (req, res) => {
     const { pass, name } = req.body;
     db.insert({ name, pass })
         .into('creds')
@@ -76,7 +77,7 @@ app.post('/register', cors(), (req, res) => {
         });
 });
 
-app.post('/send', cors(), (req, res) => {
+app.post('/send', (req, res) => {
     const { id, to, text } = req.body;
     db.insert({ source: id, destination: to, message: text })
         .into('mail')
