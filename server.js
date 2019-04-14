@@ -20,6 +20,10 @@ const db = connect({
     }
 });
 
+app.get('/', (req, res) => {
+    res.json('API WORKING!');
+});
+
 app.post('/login', (req, res) => {
     const { id, pass } = req.body;
     db.select('name', 'pass')
