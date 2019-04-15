@@ -17,7 +17,7 @@ const db = connect({
     }
 });
 
-app.get('/', (req, res) => {
+app.get('/test', (req, res) => {
     res.json('API WORKING!');
 });
 
