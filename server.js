@@ -22,6 +22,9 @@ app.get('/', (req, res) => {
 
 app.post('/login', (req, res) => {
     const { id, pass } = req.body;
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
     db.select('name', 'pass')
         .from('creds')
         .where('id', '=', id)
