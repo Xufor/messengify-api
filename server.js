@@ -5,9 +5,15 @@ const connect = require('knex');
 
 const app = express();
 
+const options = {
+    'origin': '*',
+    'methods': 'GET,POST,OPTIONS',
+    'preflightContinue': true,
+    'optionsSuccessStatus': 200,
+    'allowedHeaders': 'content-type'
+};
+
 app.use(bodyParser.json());
-app.use(cors());
-app.options('*', cors());
 
 const db = connect({
     client: 'pg',
@@ -17,11 +23,11 @@ const db = connect({
     }
 });
 
-app.get('/test', (req, res) => {
+app.get('/', (req, res) => {
     res.json('API WORKING!');
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', cors(options), (req, res) => {
     const { id, pass } = req.body;
     db.select('name', 'pass')
         .from('creds')
