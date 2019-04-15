@@ -78,7 +78,7 @@ app.post('/send', (req, res) => {
         .into('mail')
         .returning('source')
         .then((result) => {
-            res.json('Done');
+            res.json(result);
         });
 });
 
