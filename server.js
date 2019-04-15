@@ -1,17 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const connect = require('knex');
 
 const app = express();
-
-const options = {
-    'origin': '*',
-    'methods': 'GET,POST,OPTIONS',
-    'preflightContinue': true,
-    'optionsSuccessStatus': 200,
-    'allowedHeaders': 'content-type'
-};
 
 app.use(bodyParser.json());
 
@@ -27,7 +18,7 @@ app.get('/', (req, res) => {
     res.json('API WORKING!');
 });
 
-app.post('/login', cors(options), (req, res) => {
+app.post('/login', (req, res) => {
     const { id, pass } = req.body;
     db.select('name', 'pass')
         .from('creds')
