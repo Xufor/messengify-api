@@ -1,22 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const connect = require('knex');
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 
 const db = connect({
     client: 'pg',
     connection: {
-        host: process.env.DATABASE_URL,
-        ssl: true
+        host : '127.0.0.1',
+        user: 'xufor',
+        password: '1920',
+        database: 'messengify'
     }
 });
 
-app.get('/', (req, res) => {
-    res.json('API WORKING!');
-});
 
 app.post('/login', (req, res) => {
     const { id, pass } = req.body;
@@ -47,9 +48,9 @@ app.post('/load', (req, res) => {
                     .then(
                         credData => {
                             mailData.map((listItem) => {
-                                let r1 = credData.filter((value) => value.id === listItem.source);
+                                r1 = credData.filter((value) => value.id === listItem.source);
                                 listItem.source = r1[0].name;
-                                let r2 = credData.filter((value) => value.id === listItem.destination);
+                                r2 = credData.filter((value) => value.id === listItem.destination);
                                 listItem.destination = r2[0].name;
                                 return listItem;
                             });
@@ -77,10 +78,10 @@ app.post('/send', (req, res) => {
         .into('mail')
         .returning('source')
         .then((result) => {
-            res.json(result);
+            res.json('Done');
         });
 });
 
-app.listen(process.env.PORT || 3003, () => {
+app.listen(3003, () => {
     console.log(`Server is online.`);
 });
