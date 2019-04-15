@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const connect = require('knex');
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
+app.options('*', cors());
 
 const db = connect({
     client: 'pg',
@@ -20,9 +23,6 @@ app.get('/', (req, res) => {
 
 app.post('/login', (req, res) => {
     const { id, pass } = req.body;
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     db.select('name', 'pass')
         .from('creds')
         .where('id', '=', id)
